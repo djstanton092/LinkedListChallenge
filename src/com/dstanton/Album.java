@@ -10,7 +10,7 @@ public class Album {
 
     public Album(String name) {
         this.name = name;
-        songs = new ArrayList<Song>();
+        songs = new ArrayList<>();
     }
 
     public String getName() {
@@ -21,8 +21,12 @@ public class Album {
         return this.songs;
     }
 
-    public void addSong(String song, double duration) {
-        songs.add(new Song(song, duration));
+    public boolean addSong(String title, double duration) {
+        if (findSong(title) == null) {
+            this.songs.add(new Song(title, duration));
+            return true;
+        }
+        return false;
     }
 
     public void printSongs() {
@@ -30,6 +34,16 @@ public class Album {
         for (Song s: songs) {
             System.out.println((songs.indexOf(s) + 1) + ". " + s.toString());
         }
+    }
+
+    private Song findSong(String title) {
+        for (Song checkedSong: this.songs) {
+            if (checkedSong.getTitle().equalsIgnoreCase(title)) {
+                return checkedSong;
+            }
+        }
+
+        return null;
     }
 
 }

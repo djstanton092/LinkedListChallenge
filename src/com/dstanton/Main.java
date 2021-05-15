@@ -80,12 +80,14 @@ class Main {
         playlist.addSong(albums, "The Crystal Ship");
         playlist.addSong(albums, "It Won't Be Long");
 
-        playlist.printPlayList();
+        //playlist.printPlayList();
 
         menu();
 
         Scanner scanner = new Scanner(System.in);
         boolean quit = false;
+        boolean goingForward = true;
+
         int action;
 
         ListIterator<Song> playListIterator = playlist.getPlaylist().listIterator();
@@ -99,22 +101,60 @@ class Main {
                     quit = true;
                     break;
                 case 1: // - Skip forward to the next song,
-                    System.out.println("Skip forward to the next song");
+                    if (!goingForward) {
+                             if (playListIterator.hasNext()) {
+                                 playListIterator.next();
+                             }
+                             goingForward = true;
+                    }
+
+                    System.out.println("Next song");
                     if (playListIterator.hasNext()) {
                         System.out.println("Now playing " + playListIterator.next().getTitle());
+                    } else {
+                        System.out.println("End of playlist");
+                        goingForward = false;
                     }
+
                     break;
                 case 2: // - skip backwards to a previous song.
-                    System.out.println("Skip backwards to a previous song");
+                    if (goingForward) {
+                        if (playListIterator.hasPrevious()) {
+                            playListIterator.previous();
+                        }
+                        goingForward = false;
+                    }
+                    System.out.println("Previous song");
                     if (playListIterator.hasPrevious()) {
                         System.out.println("Now playing " + playListIterator.previous().getTitle());
+                    } else {
+                        System.out.println("Beginning of playlist");
+                        goingForward = true;
                     }
                     break;
                 case 3: // - Replay the current song.
                     System.out.println("Replay the current song");
+
+                    if (goingForward) {
+                        if (playListIterator.hasPrevious()) {
+                            System.out.println("Now playing " + playListIterator.previous().getTitle());
+                        } else {
+                            System.out.println("Beginning of playlist");
+                        }
+                    } else {
+                        System.out.println("Now playing " + playListIterator.next().getTitle());
+                        if (playListIterator.hasNext()) {
+
+                        } else {
+                            System.out.println("End of playlist");
+                        }
+                    }
+                    goingForward = ! goingForward;
+
                     break;
                 case 4: // - List the songs in the playlist
                     System.out.println("List the songs in the playlist");
+                    playlist.printPlayList();
                     break;
                 case 5:  // - Menu
                     menu();
@@ -130,7 +170,7 @@ class Main {
         System.out.println("Playlist menu");
         System.out.println("0 - Quit");
         System.out.println("1 - Skip forward");
-        System.out.println("2 - Skip back2");
+        System.out.println("2 - Skip back");
         System.out.println("3 - Replay");
         System.out.println("4 - List songs");
         System.out.println("5 - Menu");
